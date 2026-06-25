@@ -46,9 +46,19 @@ export function TransactionTable({ transactions, onSelectTransaction }: Transact
                             </td>
                             <td className="px-6 py-4 text-sm">
                                 {tx.currency}
-                                {tx.toCurrency && <span className="text-muted-foreground"> → {tx.toCurrency}</span>}
+                                {tx.type === "Convert" && tx.toCurrency && (
+                                    <span className="text-muted-foreground"> → {tx.toCurrency}</span>
+                                )}
                             </td>
-                            <td className="px-6 py-4 text-sm text-muted-foreground">{tx.date}</td>
+                            <td className="px-6 py-4 text-sm text-muted-foreground">
+                                {new Date(tx.createdAt).toLocaleString("en-GB", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })}
+                            </td>
                             <td className="px-6 py-4">
                                 <span className={cn(
                                     "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium",
@@ -65,9 +75,10 @@ export function TransactionTable({ transactions, onSelectTransaction }: Transact
                                 <span className={cn(
                                     tx.type === "Deposit" ? "text-green-500" : "text-foreground"
                                 )}>
-                                    {tx.amountString}
+                                    {tx.type === "Deposit" ? "+ " : tx.type === "Withdraw" ? "- " : ""}
+                                    {tx.amount.toLocaleString()} {tx.currency}
                                 </span>
-                                {tx.toAmount != null && tx.toCurrency && (
+                                {tx.type === "Convert" && tx.toAmount != null && tx.toCurrency && (
                                     <div className="text-xs text-muted-foreground font-normal">
                                         {tx.toAmount.toLocaleString()} {tx.toCurrency}
                                     </div>

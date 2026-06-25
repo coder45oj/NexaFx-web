@@ -119,7 +119,8 @@ export function TransactionDetails({ transaction, open, onClose }: TransactionDe
                                 <div className="text-center">
                                     <p className="text-sm font-medium text-[#000000]">{heroLabel}</p>
                                     <h2 className="text-2xl md:text-3xl font-bold mt-1 text-foreground">
-                                        {tx.amountString}
+                                        {tx.type === "Deposit" ? "+ " : tx.type === "Withdraw" ? "- " : ""}
+                                        {tx.amount.toLocaleString()} {tx.currency}
                                     </h2>
                                 </div>
                             </div>
@@ -128,7 +129,16 @@ export function TransactionDetails({ transaction, open, onClose }: TransactionDe
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold">Transaction Details</h3>
                                 <div className="space-y-3">
-                                    <DetailRow label="Date & Time" value={tx.date} />
+                                    <DetailRow
+                                        label="Date & Time"
+                                        value={new Date(tx.createdAt).toLocaleString("en-GB", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    />
                                     <DetailRow label="Type" value={tx.type} />
                                     <DetailRow label="From" value={tx.currency} />
                                     {tx.toCurrency && (
@@ -155,7 +165,7 @@ export function TransactionDetails({ transaction, open, onClose }: TransactionDe
                                     <DetailRow label="Status" value={tx.status} />
                                     <DetailRow
                                         label="Reference ID"
-                                        value={tx.reference}
+                                        value={tx.reference || ''}
                                         isCopyable
                                     />
                                     {tx.description && (

@@ -6,7 +6,7 @@ export function exportTransactionsToCSV(transactions: Transaction[], filename?: 
   
   // Convert transactions to CSV rows
   const csvRows = transactions.map(transaction => {
-    const date = new Date(transaction.date).toLocaleDateString('en-US', {
+    const date = new Date(transaction.createdAt).toLocaleDateString('en-US', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -20,7 +20,7 @@ export function exportTransactionsToCSV(transactions: Transaction[], filename?: 
       transaction.currency,
       transaction.amount.toString(),
       transaction.status,
-      transaction.reference,
+      transaction.reference || '',
       transaction.description || ''
     ].map(field => `"${field.replace(/"/g, '""')}"`); // Escape quotes and wrap in quotes
   });

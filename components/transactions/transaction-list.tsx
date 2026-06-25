@@ -30,8 +30,19 @@ export function TransactionList({ transactions, onSelectTransaction }: Transacti
                              <ArrowUpRight className="h-6 w-6" />}
                         </div>
                         <div className="space-y-1">
-                            <p className="text-sm font-bold text-foreground">{tx.amountString}</p>
-                            <p className="text-xs text-muted-foreground">{tx.date}</p>
+                            <p className="text-sm font-bold text-foreground">
+                                {tx.type === "Deposit" ? "+ " : tx.type === "Withdraw" ? "- " : ""}
+                                {tx.amount.toLocaleString()} {tx.currency}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                                {new Date(tx.createdAt).toLocaleString("en-GB", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })}
+                            </p>
                         </div>
                     </div>
                     <div className={cn(

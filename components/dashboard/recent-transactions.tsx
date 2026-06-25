@@ -24,10 +24,10 @@ export function RecentTransactions() {
 
   useEffect(() => {
     let cancelled = false;
-    getTransactions({ page: 1, limit: 5 })
+    getTransactions()
       .then((result) => {
         if (!cancelled)
-          setState({ status: "success", transactions: result.data });
+          setState({ status: "success", transactions: result.slice(0, 5) });
       })
       .catch(() => {
         if (!cancelled)
@@ -152,7 +152,13 @@ export function RecentTransactions() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {tx.date}
+                        {new Date(tx.createdAt).toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </td>
                       <td className="px-6 py-4">
                         <span
@@ -176,7 +182,8 @@ export function RecentTransactions() {
                             : "text-foreground"
                         )}
                       >
-                        {tx.amountString}
+                        {tx.type === "Deposit" ? "+ " : tx.type === "Withdraw" ? "- " : ""}
+                        {tx.amount.toLocaleString()} {tx.currency}
                       </td>
                     </tr>
                   ))}
@@ -209,9 +216,18 @@ export function RecentTransactions() {
                     </div>
                     <div className="space-y-1">
                       <p className="text-sm font-bold text-foreground">
-                        {tx.amountString}
+                        {tx.type === "Deposit" ? "+ " : tx.type === "Withdraw" ? "- " : ""}
+                        {tx.amount.toLocaleString()} {tx.currency}
                       </p>
-                      <p className="text-xs text-muted-foreground">{tx.date}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(tx.createdAt).toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
                     </div>
                   </div>
                   <div
